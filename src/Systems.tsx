@@ -19,7 +19,6 @@ type Props = {
 const Systems = ({
   system,
   setSystem,
-  tipInstall,
   setTipInstall,
   setICan,
   setDockingStation,
