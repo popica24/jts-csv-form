@@ -21,6 +21,10 @@ const App = () => {
   );
   const [_heatPump, setHeatPump] = useState("Nu");
 
+  const [platescAvans, setPlatescAvans] = useState("Nu");
+
+  const [impamantare, setImpamantare] = useState("Nu");
+
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {
@@ -137,72 +141,76 @@ const App = () => {
                 />
               </div>
             </div>
-            <button
-              onClick={() =>
-                Swal.fire({
-                  title: "Calculator",
-                  imageUrl:
-                    "https://www.jtssolar.ro/wp-content/uploads/2022/03/JTS-Install-Construct-logo-200px.png",
-                  imageHeight: 50,
-                  text: "Introduceti numarul de kilowati consumati pe luna",
-                  input: "text",
-                  inputAutoFocus: true,
-                  inputPlaceholder: "500",
-                  inputValidator: (value) => {
-                    // Check if the value is not a number or empty
-                    if (!/^\d+$/.test(value)) {
-                      return "Scrieti doar numarul";
-                    }
-                    return null;
-                  },
-                  showConfirmButton: true,
-                  showCancelButton: true,
-                  cancelButtonText: "Inchide",
-                  confirmButtonText: "Recomanda",
-                  preConfirm: (value) => {
-                    // Convert input value to number
-                    const kilowati = Number(value);
-                    if (kilowati <= 0) {
-                      Swal.showValidationMessage(
-                        "Valoarea trebuie sa fie mai mare decat zero."
-                      );
-                      return false;
-                    }
+            <div className="my-6 w-full flex text-center">
+              <span
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full"
+                onClick={() =>
+                  Swal.fire({
+                    title: "Calculator",
+                    imageUrl:
+                      "https://www.jtssolar.ro/wp-content/uploads/2022/03/JTS-Install-Construct-logo-200px.png",
+                    imageHeight: 50,
+                    text: "Introduceti numarul de kilowati consumati pe luna",
+                    input: "text",
+                    inputAutoFocus: true,
+                    inputPlaceholder: "500",
+                    inputValidator: (value) => {
+                      // Check if the value is not a number or empty
+                      if (!/^\d+$/.test(value)) {
+                        return "Scrieti doar numarul";
+                      }
+                      return null;
+                    },
+                    showConfirmButton: true,
+                    showCancelButton: true,
+                    cancelButtonText: "Inchide",
+                    confirmButtonText: "Calculeaza",
+                    preConfirm: (value) => {
+                      // Convert input value to number
+                      const kilowati = Number(value);
+                      if (kilowati <= 0) {
+                        Swal.showValidationMessage(
+                          "Valoarea trebuie sa fie mai mare decat zero."
+                        );
+                        return false;
+                      }
 
-                    // Calculate the required system
-                    const calculated = Math.ceil(kilowati / 30 / 3.3);
+                      // Calculate the required system
+                      const calculated = Math.ceil(kilowati / 30 / 3.3);
 
-                    console.log(calculated);
+                      // Find suitable systems from both monofazat and trifazat
+                      const monoFazedsystem =
+                        monofazedSystems.find(
+                          (sys) => convertPowerToNumber(sys.putere) > calculated
+                        ) || monofazedSystems[monofazedSystems.length - 1];
 
-                    // Find a suitable system from the list
-                    const monoFazedsystem = monofazedSystems.find(
-                      (sys) => convertPowerToNumber(sys.putere) > calculated
-                    );
-                    const trifazedSystem = trifazedSystems.find(
-                      (sys) => convertPowerToNumber(sys.putere) > calculated
-                    );
-                    // If a system is found, set it
-                    if (monoFazedsystem && trifazedSystem) {
-                      Swal.fire({
-                        title: "Calculator",
-                        imageUrl:
-                          "https://www.jtssolar.ro/wp-content/uploads/2022/03/JTS-Install-Construct-logo-200px.png",
-                        imageHeight: 50,
-                        text: `Pentru consumul dvs, recomandam sistemul ${monoFazedsystem.putere} - ${monoFazedsystem.pret} sau ${trifazedSystem.putere} - ${trifazedSystem.pret}`,
-                      });
-                    } else {
-                      // Show a validation message if no suitable system is found
-                      Swal.showValidationMessage(
-                        "Nu am gasit un sistem potrivit."
-                      );
-                      return false;
-                    }
-                  },
-                })
-              }
-            >
-              Vezi ce ti se potriveste !
-            </button>
+                      const trifazedSystem =
+                        trifazedSystems.find(
+                          (sys) => convertPowerToNumber(sys.putere) > calculated
+                        ) || trifazedSystems[trifazedSystems.length - 1];
+
+                      // Display the recommendation message
+                      if (monoFazedsystem && trifazedSystem) {
+                        Swal.fire({
+                          title: "Calculator",
+                          imageUrl:
+                            "https://www.jtssolar.ro/wp-content/uploads/2022/03/JTS-Install-Construct-logo-200px.png",
+                          imageHeight: 50,
+                          text: `Pentru consumul dvs, recomandam sistemul monofazat ${monoFazedsystem.putere} - ${monoFazedsystem.pret} sau trifazat ${trifazedSystem.putere} - ${trifazedSystem.pret}`,
+                        });
+                      } else {
+                        Swal.showValidationMessage(
+                          "Nu am gasit un sistem potrivit."
+                        );
+                        return false;
+                      }
+                    },
+                  })
+                }
+              >
+                Vezi ce ti se potriveste !
+              </span>
+            </div>
             <div className="flex flex-wrap -mx-3 mb">
               <div className="w-full px-3">
                 <label
@@ -317,6 +325,7 @@ const App = () => {
             </div>
             <hr />
             <Systems
+              tipInstall={_tipInstall}
               system={system}
               setSystem={setSystem}
               setTipInstall={setTipInstall}
@@ -327,8 +336,65 @@ const App = () => {
               batteryNumber={batteryNumber}
               dockingStation={dockingStation}
             />
+            <div className="w-full my-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-state"
+              >
+                Platesc contributia in avans
+              </label>
+              <div className="relative">
+                <select
+                  name="avans"
+                  onChange={(e) => setPlatescAvans(e.target.value)}
+                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="grid-state"
+                >
+                  <option value={"Nu"}>Nu</option>
+                  <option value={"Da"}>Da</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div className="w-full my-6 md:mb-0">
+              <label
+                className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                htmlFor="grid-state"
+              >
+                Modalitate de implementare a împământării
+              </label>
+              <div className="relative">
+                <select
+                  name="avans"
+                  onChange={(e) => setPlatescAvans(e.target.value)}
+                  className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="grid-state"
+                >
+                  <option value={"Nu"}>Realizată individual</option>
+                  <option value={"Da"}>Realizată de echipa noastra</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg
+                    className="fill-current h-4 w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
             <div className="flex items-center justify-center my-8">
               <button
+                type="submit"
                 id="submit-btn"
                 disabled={loading}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"

@@ -6,6 +6,7 @@ import { convertCurrencyToNumber } from "./utils";
 type Props = {
   system: SystemType | null;
   setSystem: React.Dispatch<React.SetStateAction<SystemType | null>>;
+  tipInstall: string;
   setTipInstall: React.Dispatch<React.SetStateAction<string>>;
   setICan: React.Dispatch<React.SetStateAction<string>>;
   setDockingStation: React.Dispatch<React.SetStateAction<string>>;
@@ -18,6 +19,7 @@ type Props = {
 const Systems = ({
   system,
   setSystem,
+  tipInstall,
   setTipInstall,
   setICan,
   setDockingStation,
@@ -96,13 +98,13 @@ const Systems = ({
             >
               {trifazat &&
                 trifazedSystems.map((sys, i) => (
-                  <option value={i}>
+                  <option value={i} key={sys.putere}>
                     {sys.putere} - {sys.pret}
                   </option>
                 ))}
               {!trifazat &&
                 monofazedSystems.map((sys, i) => (
-                  <option value={i}>
+                  <option value={i} key={sys.putere}>
                     {sys.putere} - {sys.pret}
                   </option>
                 ))}
@@ -208,8 +210,10 @@ const Systems = ({
           >
             <option>Acoperis inclinat - Tabla</option>
             <option>Acoperis inclinat - Tigla</option>
-            <option>Acoperis Drept</option>
-            <option>Sol</option>
+            <option>Acoperis Drept + structura in regim propriu</option>
+            <option>Acoperis Drept + structura tip domo 450 lei/kw</option>
+            <option>Sol + structura la sol 400 lei/kw</option>
+            <option>Sol + structura in regim propriu</option>
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             <svg
@@ -222,7 +226,6 @@ const Systems = ({
           </div>
         </div>
       </div>
-
       <div className="w-full my-6 md:mb-0">
         <label
           className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
@@ -319,20 +322,20 @@ const Systems = ({
           className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
           htmlFor="grid-state"
         >
-          Doresc garantie
+          Doresc asigurare
         </label>
         <div className="relative">
           <select
-            name="garantie"
+            name="asigurare"
             onChange={(e) => setHeatPump(e.target.value)}
             className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
             id="grid-state"
           >
-            <option selected value={"Nu doresc garantie"}>
+            <option selected value={"Nu doresc asigurare"}>
               Nu
             </option>
             <option
-              value={`Doresc garantie - ${Math.ceil(
+              value={`Doresc asigurare - ${Math.ceil(
                 (0.7 / 100) *
                   (convertCurrencyToNumber(system?.pret) +
                     convertCurrencyToNumber(batteryNumber) +
