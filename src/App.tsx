@@ -3,9 +3,8 @@ import Systems from "./Systems";
 import { SystemType } from "./types";
 import emailjs from "emailjs-com";
 import Swal from "sweetalert2";
-import Calculator from "./Calculator";
 import { monofazedSystems, trifazedSystems } from "./sys";
-import { convertCurrencyToNumber, convertPowerToNumber } from "./utils";
+import { convertPowerToNumber } from "./utils";
 
 const App = () => {
   const [name, setName] = useState("");
