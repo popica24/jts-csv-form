@@ -21,16 +21,16 @@ const App = () => {
   );
   const [_heatPump, setHeatPump] = useState("Nu");
 
-  const [platescAvans, setPlatescAvans] = useState("Nu");
+  const [_platescAvans, setPlatescAvans] = useState("Nu");
 
-  const [impamantare, setImpamantare] = useState("Nu");
+  const [_impamantare, setImpamantare] = useState("Realizată individual");
 
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const sistemString = `${system?.putere} - ${system?.pret}\n     Numar panouri : ${system?.panouri}\n     Invertor ${system?.invertor}\n     Stocare ${system?.stocare}     `;
+    const sistemString = `${system?.putere} - ${system?.pret}\n     Invertor : ${system?.invertor}\n     Panouri : ${system?.panouri}\n     Stocare : ${system?.stocare}\n      Numar panouri : ${system?.numar}`;
 
     const textAreaElement = document.getElementById(
       "text-area"
@@ -373,13 +373,17 @@ const App = () => {
               </label>
               <div className="relative">
                 <select
-                  name="avans"
-                  onChange={(e) => setPlatescAvans(e.target.value)}
+                  name="impamantare"
+                  onChange={(e) => setImpamantare(e.target.value)}
                   className="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                   id="grid-state"
                 >
-                  <option value={"Nu"}>Realizată individual</option>
-                  <option value={"Da"}>Realizată de echipa noastra</option>
+                  <option value={"Realizată individual"}>
+                    Realizată individual
+                  </option>
+                  <option value={"Realizată de echipa noastra"}>
+                    Realizată de echipa noastra
+                  </option>
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <svg
