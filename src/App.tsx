@@ -176,7 +176,7 @@ const App = () => {
                       }
 
                       // Calculate the required system
-                      const calculated = Math.ceil(kilowati / 30 / 3.3);
+                      const calculated = kilowati / 30 / 3.3;
 
                       // Find suitable systems from both monofazat and trifazat
                       const monoFazedsystem =
