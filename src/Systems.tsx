@@ -176,10 +176,10 @@ const Systems = ({
               Nu doresc baterii extra
             </option>
             <option value={"O baterie extra - 3200 lei"}>
-              O baterie extra - 3200 lei
+              O baterie extra (5.1kW) - 3200 lei
             </option>
             <option value={"Doua baterii extra - 6400 lei"}>
-              Doua baterii extra - 6400 lei
+              Doua baterii extra (5.1kW x 2 SAU 10kW x 2) - 6400 lei
             </option>
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
