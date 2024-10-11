@@ -148,7 +148,7 @@ const App = () => {
             </div>
             <div className="my-6 w-full flex text-center">
               <span
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full cursor-pointer"
                 onClick={() =>
                   Swal.fire({
                     title: "Calculator",
@@ -186,8 +186,24 @@ const App = () => {
                       // Find suitable systems from both monofazat and trifazat
                       const monoFazedsystem =
                         monofazedSystems.find(
-                          (sys) => convertPowerToNumber(sys.putere) > calculated
+                          (sys) =>
+                            convertPowerToNumber(sys.putere) > calculated &&
+                            !sys.putere.includes("Victron")
                         ) || monofazedSystems[monofazedSystems.length - 1];
+
+                      const victronSystem =
+                        monofazedSystems.find(
+                          (sys) =>
+                            convertPowerToNumber(sys.putere) > calculated &&
+                            sys.putere.includes("Victron")
+                        ) ||
+                        monofazedSystems.filter((sys) =>
+                          sys.putere.includes("Victron")
+                        )[
+                          monofazedSystems.filter((sys) =>
+                            sys.putere.includes("Victron")
+                          ).length - 1
+                        ];
 
                       const trifazedSystem =
                         trifazedSystems.find(
@@ -201,7 +217,17 @@ const App = () => {
                           imageUrl:
                             "https://www.jtssolar.ro/wp-content/uploads/2022/03/JTS-Install-Construct-logo-200px.png",
                           imageHeight: 50,
-                          text: `Pentru consumul dvs, recomandam sistemul monofazat ${monoFazedsystem.putere} - ${monoFazedsystem.pret} sau trifazat ${trifazedSystem.putere} - ${trifazedSystem.pret}`,
+                          customClass: {
+                            htmlContainer: "text-xs", // Tailwind or custom CSS class for smaller text
+                          },
+                          html: `
+                            <span>Pentru consumul dvs, recomandam:<br></span>
+                            <span style="font-size: 15px;">
+                              • <b>Sistemul monofazat ${monoFazedsystem.putere} - ${monoFazedsystem.pret}<br></b>
+                              • <b>Sistemul ${victronSystem.putere} - ${victronSystem.pret}<br></b>
+                              • <b>Sistemul trifazat ${trifazedSystem.putere} - ${trifazedSystem.pret}</b>
+                            </span>
+                          `,
                         });
                       } else {
                         Swal.showValidationMessage(
