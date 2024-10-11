@@ -30,6 +30,11 @@ const App = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+    if (judet == "" || !judet) {
+      Swal.fire("Va rugam sa selectati judetul !");
+      return;
+    }
+
     const sistemString = `${system?.putere} - ${system?.pret}\n     Invertor : ${system?.invertor}\n     Panouri : ${system?.panouri}\n     Stocare : ${system?.stocare}\n      Numar panouri : ${system?.numar}`;
 
     const textAreaElement = document.getElementById(
